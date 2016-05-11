@@ -10,20 +10,21 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6b566c5b4da35d474758324899cb4562"
 SRC_URI = "git://anongit.freedesktop.org/beignet;branch=Release_v1.1; \
            file://Driver-fix-the-annoying-Failed-to-release-userptr-error-message.patch; "
 
-DEPENDS = "opencl-headers ocl-icd llvm-clang python-dev libdrm libxext libxfixes zlib mesa libgcc libpthread-stubs"
-RDEPENDS_${PN} = "ocl-icd llvm-clang libdrm libxext libxfixes zlib mesa libpthread-stubs"
+DEPENDS = "ocl-icd clang clang-native libdrm libxext libxfixes zlib mesa"
+#RDEPENDS_${PN} = "ocl-icd libdrm libxext libxfixes zlib mesa libpthread-stubs"
 
-export WANT_LLVM_RELEASE = "3.6"
+TOOLCHAIN = "clang"
+export PYTHON_EXECUTABLE = "python"
 
 PV = "1.1.1"
 SRCREV = "6be1a61e21647238f640f89c9b4b99443602b3e0"
 
 S = "${WORKDIR}/git"
 
-inherit cmake pythonnative
-
+inherit cmake
+OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 EXTRA_OECMAKE = " \
-                -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_SKIP_RPATH=TRUE \
 		-DCOMPILER=GCC \
 		"
@@ -43,13 +44,13 @@ do_configure_prepend () {
 
 do_compile_prepend () {
     # FIXME: hack; relying on the target sysroot means we have to build to and from x86_64
-    export LD_LIBRARY_PATH="${STAGING_DIR_TARGET}/${libdir}:$LD_LIBRARY_PATH"
+    #export LD_LIBRARY_PATH="${STAGING_DIR_TARGET}/${libdir}:$LD_LIBRARY_PATH"
 }
 
 do_compile_append () {
     # FIXME: Fix LD_LIBRARY_PATH after we changed it...
-    j=`echo $LD_LIBRARY_PATH | sed "s:^.*\:::"`
-    export LD_LIBRARY_PATH="$j"
+    #j=`echo $LD_LIBRARY_PATH | sed "s:^.*\:::"`
+    #export LD_LIBRARY_PATH="$j"
 }
 
 do_install_append () {
@@ -61,4 +62,4 @@ do_install_append () {
     echo ${libdir}/beignet/libcl.so > ${D}${sysconfdir}/OpenCL/vendors/intel-beignet.icd
 }
 
-INSANE_SKIP_${PN} = "debug-files"
+#INSANE_SKIP_${PN} = "debug-files"
