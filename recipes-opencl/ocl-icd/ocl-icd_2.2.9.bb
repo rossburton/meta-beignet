@@ -8,3 +8,5 @@ SRC_URI[sha256sum] = "0c8ac13e2c5b737c34de49f9aca6cad3c4d33dd0bbb149b01238d76e79
 inherit autotools
 
 DEPENDS += "ruby-native"
+
+BBCLASSEXTEND = "native"
