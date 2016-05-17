@@ -1,8 +1,21 @@
 diff --git a/CMake/FindLLVM.cmake b/CMake/FindLLVM.cmake
-index 32579f8..afad755 100644
+index 32579f8..df78ec7 100644
 --- a/CMake/FindLLVM.cmake
 +++ b/CMake/FindLLVM.cmake
-@@ -104,12 +104,16 @@ string(REGEX REPLACE " *\n" "" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS_ORIG})
+@@ -70,12 +70,6 @@ execute_process(
+ )
+ 
+ execute_process(
+-  COMMAND ${LLVM_CONFIG_EXECUTABLE} --libdir
+-  OUTPUT_VARIABLE LLVM_LIBRARY_DIR
+-  OUTPUT_STRIP_TRAILING_WHITESPACE
+-)
+-
+-execute_process(
+   COMMAND ${LLVM_CONFIG_EXECUTABLE} --cppflags
+   OUTPUT_VARIABLE LLVM_CFLAGS
+   OUTPUT_STRIP_TRAILING_WHITESPACE
+@@ -104,12 +98,14 @@ string(REGEX REPLACE " *\n" "" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS_ORIG})
  endif (LLVM_SYSTEM_LIBS_ORIG)
  endif (LLVM_VERSION_NODOT VERSION_GREATER 34)
  
@@ -11,8 +24,6 @@ index 32579f8..afad755 100644
 +string(REGEX REPLACE "-lLLVMARM[^ ]* " "" LLVM_MODULE_LIBS "${LLVM_MODULE_LIBS}")
 +string(REGEX REPLACE "-lLLVMMips[^ ]* " "" LLVM_MODULE_LIBS "${LLVM_MODULE_LIBS}")
 +string(REGEX REPLACE "-lLLVMPowerPC[^ ]*" "" LLVM_MODULE_LIBS "${LLVM_MODULE_LIBS}")
-+
-+set(LLVM_LIBRARY_DIR "/data/poky-master/tmp/sysroots/intel-corei7-64/usr/lib")
 +
  macro(add_one_lib name)
 -  FIND_LIBRARY(CLANG_LIB

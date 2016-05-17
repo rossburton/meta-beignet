@@ -18,12 +18,10 @@ DEPENDS_class-native = "clang-native"
 
 inherit cmake pkgconfig
 
-export LLVM_HACK = "${STAGING_LIBDIR}"
-
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
-EXTRA_OECMAKE = " -DUSE_STANDALONE_GBE_COMPILER=true -DSTANDALONE_GBE_COMPILER_DIR=${STAGING_NATIVE_BINDIR}"
-EXTRA_OECMAKE_class-native = ""
+EXTRA_OECMAKE = " -DUSE_STANDALONE_GBE_COMPILER=true -DLLVM_LIBRARY_DIR=${STAGING_LIBDIR}"
+EXTRA_OECMAKE_class-native = " -DBEIGNET_INSTALL_DIR=/usr/lib/beignet -DLLVM_LIBRARY_DIR=${STAGING_LIBDIR_NATIVE}"
 
 # TODO respect distrofeatures for x11
 PACKAGECONFIG ??= ""
@@ -53,4 +51,7 @@ do_install_class-native() {
 
     install -d ${D}${bindir}
     install ${B}/backend/src/gbe_bin_generater ${D}${bindir}
+
+    install -d ${D}${bindir}/include
+    install ${B}/backend/src/libocl/usr/lib/beignet/include/* ${D}${bindir}/include
 }
