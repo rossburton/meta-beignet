@@ -1,0 +1,25 @@
+From 598be075c8912b48242f203b035ce8988fb890e7 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Tue, 24 May 2016 14:36:45 +0100
+Subject: [PATCH] Ensure paths to beignet.bc and beignet.pch include a final /
+
+---
+ backend/src/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/backend/src/CMakeLists.txt b/backend/src/CMakeLists.txt
+index a4e909a..a21ca75 100644
+--- a/backend/src/CMakeLists.txt
++++ b/backend/src/CMakeLists.txt
+@@ -1,6 +1,6 @@
+-set (OCL_BITCODE_BIN "${BEIGNET_INSTALL_DIR}beignet.bc")
++set (OCL_BITCODE_BIN "${BEIGNET_INSTALL_DIR}/beignet.bc")
+ set (OCL_HEADER_DIR "${BEIGNET_INSTALL_DIR}/include")
+-set (OCL_PCH_OBJECT "${BEIGNET_INSTALL_DIR}beignet.pch")
++set (OCL_PCH_OBJECT "${BEIGNET_INSTALL_DIR}/beignet.pch")
+ set (GBE_OBJECT_DIR "${BEIGNET_INSTALL_DIR}/libgbe.so")
+ set (INTERP_OBJECT_DIR "${BEIGNET_INSTALL_DIR}/libgbeinterp.so")
+ 
+-- 
+2.8.0.rc3
+

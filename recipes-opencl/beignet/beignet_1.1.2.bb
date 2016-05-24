@@ -3,7 +3,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6b566c5b4da35d474758324899cb4562"
 
 SRC_URI = "git://anongit.freedesktop.org/beignet \
            file://respect-cflags.patch \
-           file://fix-llvm-paths.patch"
+           file://fix-llvm-paths.patch \
+           file://install-gbe.patch \
+           file://correct-paths.patch"
 SRC_URI_append_class-native = " file://reduced-native.patch"
 
 BBCLASSEXTEND = "native"
@@ -20,8 +22,9 @@ inherit cmake pkgconfig
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
-EXTRA_OECMAKE = " -DUSE_STANDALONE_GBE_COMPILER=true -DLLVM_LIBRARY_DIR=${STAGING_LIBDIR}"
-EXTRA_OECMAKE_class-native = " -DBEIGNET_INSTALL_DIR=/usr/lib/beignet -DLLVM_LIBRARY_DIR=${STAGING_LIBDIR_NATIVE}"
+EXTRA_OECMAKE = "-DLLVM_LIBRARY_DIR=${STAGING_LIBDIR} -DBEIGNET_INSTALL_DIR=/usr/lib/beignet"
+EXTRA_OECMAKE_append_class-target = " -DCMAKE_SKIP_RPATH=TRUE -DUSE_STANDALONE_GBE_COMPILER=true"
+#EXTRA_OECMAKE_append_class-target = " -DGEN_PCI_ID=0x0162"
 
 # TODO respect distrofeatures for x11
 PACKAGECONFIG ??= ""
@@ -31,18 +34,34 @@ PACKAGECONFIG[x11] = ",,libxext libxfixes"
 
 FILES_${PN} += " \
                 ${sysconfdir}/OpenCL/vendors/intel-beignet.icd \
-                ${libdir} \
-                ${libdir}/beignet/ \
-                ${libdir}/beignet/* \
+                ${libdir} ${includedir} \
                "
 
-do_install_append () {
+FILES_${PN}-dev = ""
+
+do_install_append() {
     # Remove the headers; these will be included by another recipe
     rm -rf ${D}${includedir}/CL
 
     # Create intel-beignet.icd file
     mkdir -p ${D}${sysconfdir}/OpenCL/vendors/
     echo ${libdir}/beignet/libcl.so > ${D}${sysconfdir}/OpenCL/vendors/intel-beignet.icd
+}
+
+do_install_append_class-target() {
+    install -d ${D}${bindir}
+    install -m 0755 ${B}/backend/src/gbe_bin_generater ${D}${bindir}
+
+    install -d ${D}${libdir}/beignet/include
+    install -m 0755 ${B}/utests/utest_run ${D}${libdir}/beignet
+    install -m 0755 ${B}/utests/setenv.sh ${D}${libdir}/beignet
+    install -m 0644 ${S}/kernels/*.cl ${D}${libdir}/beignet
+    install -m 0644 ${S}/kernels/*.bmp ${D}${libdir}/beignet
+    install -m 0644 ${S}/kernels/compiler_ceil.bin ${D}${libdir}/beignet
+    install -m 0644 ${S}/kernels/runtime_compile_link.h ${D}${libdir}/beignet
+    install -m 0644 ${S}/kernels/include/runtime_compile_link_inc.h ${D}${libdir}/beignet/include/runtime_compile_link_inc.h
+    install -d ${D}${libdir}
+    install -m 0644 ${B}/utests/libutests.so ${D}${libdir}
 }
 
 do_install_class-native() {

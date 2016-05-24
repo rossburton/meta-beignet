@@ -1,0 +1,68 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7f43fa2..f2b2931 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -100,14 +100,12 @@ set (CMAKE_C_FLAGS_MINSIZEREL     "-Os -DNDEBUG -DGBE_DEBUG=0")
+ set (CMAKE_C_FLAGS_RELEASE        "-O2 -DNDEBUG -DGBE_DEBUG=0")
+ 
+ 
+-IF (USE_STANDALONE_GBE_COMPILER STREQUAL "true")
++IF(USE_STANDALONE_GBE_COMPILER STREQUAL "true")
+   Find_Package(StandaloneGbeCompiler)
+-ELSE (USE_STANDALONE_GBE_COMPILER STREQUAL "true")
+-  # Front end stuff we need
+-  #INCLUDE(CMake/FindLLVM.cmake)
+-  Find_Package(LLVM 3.3)
+-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+-ENDIF (USE_STANDALONE_GBE_COMPILER STREQUAL "true")
++ENDIF()
++#INCLUDE(CMake/FindLLVM.cmake)
++Find_Package(LLVM 3.3)
++SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+ 
+ 
+ set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-Bsymbolic -Wl,--no-undefined ${LLVM_LDFLAGS}")
+diff --git a/backend/src/CMakeLists.txt b/backend/src/CMakeLists.txt
+index a4e909a..4fadcc8 100644
+--- a/backend/src/CMakeLists.txt
++++ b/backend/src/CMakeLists.txt
+@@ -9,11 +9,8 @@ configure_file (
+     "GBEConfig.h"
+ )
+ 
+-#do not involve libocl if the standalone compiler is given,
+-if (NOT (USE_STANDALONE_GBE_COMPILER STREQUAL "true"))
+ add_subdirectory(libocl)
+ add_dependencies(beignet_bitcode libocl)
+-endif ()
+ 
+ set (LOCAL_GBE_OBJECT_DIR "${CMAKE_CURRENT_BINARY_DIR}/libgbe.so" PARENT_SCOPE)
+ set (LOCAL_INTERP_OBJECT_DIR "${CMAKE_CURRENT_BINARY_DIR}/libgbeinterp.so" PARENT_SCOPE)
+@@ -150,12 +147,9 @@ include_directories (.)
+ link_directories (${LLVM_LIBRARY_DIRS} ${DRM_LIBDIR})
+ include_directories(${LLVM_INCLUDE_DIRS})
+ 
+-#do not build libgbe.so if the standalone compiler is given
+-if (NOT (USE_STANDALONE_GBE_COMPILER STREQUAL "true"))
+ add_library (gbe SHARED ${GBE_SRC})
+ target_link_libraries(gbe ${GBE_LINK_LIBRARIES})
+ add_dependencies(gbe beignet_bitcode)
+-endif (NOT (USE_STANDALONE_GBE_COMPILER STREQUAL "true"))
+ 
+ add_library(gbeinterp SHARED gbe_bin_interpreter.cpp)
+ 
+@@ -172,7 +166,6 @@ endif(LLVM_VERSION_NODOT VERSION_EQUAL 34)
+ link_directories (${LLVM_LIBRARY_DIR} ${DRM_LIBDIR})
+ 
+ #do not build nor install if the standalone compiler is given
+-if (NOT (USE_STANDALONE_GBE_COMPILER STREQUAL "true"))
+ if (BUILD_STANDALONE_GBE_COMPILER STREQUAL "true")
+ macro(remove_cxx_flag flag)
+   string(REPLACE "${flag}" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+@@ -197,6 +190,5 @@ install (TARGETS gbe LIBRARY DESTINATION ${BEIGNET_INSTALL_DIR})
+ install (FILES ${OCL_OBJECT_DIR}/beignet.bc DESTINATION ${BEIGNET_INSTALL_DIR})
+ install (FILES ${OCL_OBJECT_DIR}/beignet.pch DESTINATION ${BEIGNET_INSTALL_DIR})
+ install (FILES ${OCL_HEADER_FILES} DESTINATION ${BEIGNET_INSTALL_DIR}/include)
+-endif (NOT (USE_STANDALONE_GBE_COMPILER STREQUAL "true"))
+ 
+ install (TARGETS gbeinterp LIBRARY DESTINATION ${BEIGNET_INSTALL_DIR})
