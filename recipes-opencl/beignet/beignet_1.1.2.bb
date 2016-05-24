@@ -12,7 +12,7 @@ BBCLASSEXTEND = "native"
 # TODO set PV to reflect that this is 1.1.2+patches.
 
 # Need a newer srcrev as 1.1.2 won't build with the LLVM release in meta-clang
-SRCREV = "8dfec54e2f3e32710702ed60f5171741360f28bb"
+SRCREV = "c511a8f051a6efa57fa28314a7b5f51b658afa59"
 S = "${WORKDIR}/git"
 
 DEPENDS = "beignet-native clang ocl-icd libdrm mesa"
@@ -24,7 +24,7 @@ OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
 EXTRA_OECMAKE = "-DLLVM_LIBRARY_DIR=${STAGING_LIBDIR} -DBEIGNET_INSTALL_DIR=/usr/lib/beignet"
 EXTRA_OECMAKE_append_class-target = " -DCMAKE_SKIP_RPATH=TRUE -DUSE_STANDALONE_GBE_COMPILER=true"
-#EXTRA_OECMAKE_append_class-target = " -DGEN_PCI_ID=0x0162"
+#EXTRA_OECMAKE_append_class-target = " -DGEN_PCI_ID=0x0166"
 
 # TODO respect distrofeatures for x11
 PACKAGECONFIG ??= ""
