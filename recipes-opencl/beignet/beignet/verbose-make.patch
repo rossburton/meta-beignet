@@ -1,0 +1,27 @@
+From 8454058c30d1e2bd0448692cb377aad41bbc6a54 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Wed, 25 May 2016 11:19:38 +0100
+Subject: [PATCH] CMakeLists: don't force CMAKE_VERBOSE_MAKEFILE to false
+
+This defaults to false anyway and stops users from setting it to true.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f2b2931..0d59af3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,7 +40,6 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}
+ 
+ INCLUDE (FindPkgConfig)
+ 
+-SET(CMAKE_VERBOSE_MAKEFILE "false")
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/")
+ INCLUDE (GNUInstallDirs OPTIONAL)
+ # support old CMake without GNUInstallDirs
+-- 
+2.8.0.rc3
+

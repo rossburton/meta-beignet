@@ -5,7 +5,8 @@ SRC_URI = "git://anongit.freedesktop.org/beignet \
            file://respect-cflags.patch \
            file://fix-llvm-paths.patch \
            file://install-gbe.patch \
-           file://correct-paths.patch"
+           file://correct-paths.patch \
+           file://verbose-make.patch"
 SRC_URI_append_class-native = " file://reduced-native.patch"
 
 BBCLASSEXTEND = "native"
