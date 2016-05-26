@@ -62,6 +62,8 @@ do_install_append_class-target() {
     install -m 0644 ${S}/kernels/include/runtime_compile_link_inc.h ${D}${libdir}/beignet/include/runtime_compile_link_inc.h
     install -d ${D}${libdir}
     install -m 0644 ${B}/utests/libutests.so ${D}${libdir}
+
+    test -f ${D}${libdir}/beignet/beignet.bc || bberror "beignet.bc wasn't built"
 }
 
 do_install_class-native() {
