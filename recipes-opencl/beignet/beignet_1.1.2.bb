@@ -2,6 +2,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6b566c5b4da35d474758324899cb4562"
 
 SRC_URI = "git://anongit.freedesktop.org/beignet \
+           file://more-broxton.patch \
            file://respect-cflags.patch \
            file://fix-llvm-paths.patch \
            file://install-gbe.patch \
