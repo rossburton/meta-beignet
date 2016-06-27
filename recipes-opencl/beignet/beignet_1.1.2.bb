@@ -51,21 +51,21 @@ do_install_append() {
 }
 
 do_install_append_class-target() {
-    install -d ${D}${bindir}
-    install -m 0755 ${B}/backend/src/gbe_bin_generater ${D}${bindir}
-
-    install -d ${D}${libdir}/beignet/include
-    install -m 0755 ${B}/utests/utest_run ${D}${libdir}/beignet
-    install -m 0755 ${B}/utests/setenv.sh ${D}${libdir}/beignet
-    install -m 0644 ${S}/kernels/*.cl ${D}${libdir}/beignet
-    install -m 0644 ${S}/kernels/*.bmp ${D}${libdir}/beignet
-    install -m 0644 ${S}/kernels/compiler_ceil.bin ${D}${libdir}/beignet
-    install -m 0644 ${S}/kernels/runtime_compile_link.h ${D}${libdir}/beignet
-    install -m 0644 ${S}/kernels/include/runtime_compile_link_inc.h ${D}${libdir}/beignet/include/runtime_compile_link_inc.h
-    install -d ${D}${libdir}
-    install -m 0644 ${B}/utests/libutests.so ${D}${libdir}
-
+    # Sanity test that the build was actually successful
     test -f ${D}${libdir}/beignet/beignet.bc || bberror "beignet.bc wasn't built"
+
+    install -D -m 0755 ${B}/backend/src/gbe_bin_generater ${D}${bindir}/gbe_bin_generater
+
+    # Install pieces so the test suite can run
+    install -d ${D}${libdir}/beignet/utests
+    install -m 0755 ${B}/utests/utest_run ${D}${libdir}/beignet/utests
+    install -m 0755 ${B}/utests/setenv.sh ${D}${libdir}/beignet/utests
+    install -m 0644 ${S}/kernels/*.cl ${D}${libdir}/beignet/utests
+    install -m 0644 ${S}/kernels/*.bmp ${D}${libdir}/beignet/utests
+    install -m 0644 ${S}/kernels/compiler_ceil.bin ${D}${libdir}/beignet/utests
+    install -m 0644 ${S}/kernels/runtime_compile_link.h ${D}${libdir}/beignet/utests
+    install -m 0644 ${S}/kernels/include/runtime_compile_link_inc.h ${D}${libdir}/beignet/utests/include
+    install -m 0644 ${B}/utests/libutests.so ${D}${libdir}
 }
 
 do_install_class-native() {
