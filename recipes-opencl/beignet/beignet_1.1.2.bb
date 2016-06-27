@@ -24,8 +24,8 @@ inherit cmake pkgconfig
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
-EXTRA_OECMAKE = "-DLLVM_LIBRARY_DIR=${STAGING_LIBDIR} -DBEIGNET_INSTALL_DIR=/usr/lib/beignet"
-EXTRA_OECMAKE_append_class-target = " -DCMAKE_SKIP_RPATH=TRUE -DUSE_STANDALONE_GBE_COMPILER=true"
+EXTRA_OECMAKE = "-DCMAKE_SKIP_RPATH=TRUE -DLLVM_LIBRARY_DIR=${STAGING_LIBDIR} -DBEIGNET_INSTALL_DIR=/usr/lib/beignet"
+EXTRA_OECMAKE_append_class-target = " -DUSE_STANDALONE_GBE_COMPILER=true"
 #EXTRA_OECMAKE_append_class-target = " -DGEN_PCI_ID=0x0166"
 
 # TODO respect distrofeatures for x11
@@ -74,6 +74,7 @@ do_install_class-native() {
 
     install -d ${D}${bindir}
     install ${B}/backend/src/gbe_bin_generater ${D}${bindir}
+    install ${B}/backend/src/libgbe.so ${D}${libdir}
 
     install -d ${D}${bindir}/include
     install ${B}/backend/src/libocl/usr/lib/beignet/include/* ${D}${bindir}/include
